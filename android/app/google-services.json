@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1092111981191",
+    "project_id": "proacadamy-student-store",
+    "storage_bucket": "proacadamy-student-store.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092111981191:android:939b82c3aadf1fee44f622",
+        "android_client_info": {
+          "package_name": "com.example.proacadamy_student_management_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092111981191-88sn04plagert4005gqsn6ph9mo1q2kg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.proacadamy_student_management_app",
+            "certificate_hash": "f6b1ce0f63c79158cab517f39b4db8e12ada92a5"
+          }
+        },
+        {
+          "client_id": "1092111981191-043p27cr8gsvhitji6u3u5u5fch91r9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDST5nIvafoFs097KJ-mNGYB9Q7L5NZATA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092111981191-043p27cr8gsvhitji6u3u5u5fch91r9p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
