@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:proacadamy_student_management_app/const_vaues.dart';
-import 'package:proacadamy_student_management_app/views/login_screens/login_screen.dart';
+import 'package:proacadamy_student_management_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -35,7 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
   // Navigate to login or home page
   Future<void> navigateToSelectedPage() async {
     Future.delayed(const Duration(milliseconds: 5000), () async {
-      Navigator.pushReplacementNamed(context, LoginScreen.pageKey);
+      Provider.of<User>(context, listen: false).navigateWithuserStatus(context);
+      // Navigator.pushReplacementNamed(context, LoginScreen.pageKey);
     });
   }
 

@@ -4,14 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:gender_picker/source/gender_picker.dart';
 import 'package:logger/logger.dart';
-import 'package:proacadamy_student_management_app/components/aler.dart';
+import 'package:proacadamy_student_management_app/components/alert.dart';
 import 'package:proacadamy_student_management_app/components/custom_buttons.dart';
 import 'package:proacadamy_student_management_app/components/custom_text.dart';
 import 'package:proacadamy_student_management_app/components/text_field.dart';
 import 'package:proacadamy_student_management_app/const_vaues.dart';
 import 'package:proacadamy_student_management_app/controller/data_validation.dart';
-import 'package:proacadamy_student_management_app/models/student.dart';
 import 'package:proacadamy_student_management_app/providers/location_provider.dart';
+import 'package:proacadamy_student_management_app/providers/user_provider.dart';
 import 'package:proacadamy_student_management_app/utils/app_colours.dart';
 import 'package:proacadamy_student_management_app/views/login_screens/login_screen.dart';
 import 'package:provider/provider.dart';
@@ -53,11 +53,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool _isCalandeShow = false;
   bool _isSecure = false;
   bool _isLocationLoading = false;
+  bool _isRegistrationLoading = false;
 //###############################################################################//
   String _address = '';
+  String addressButtonText = 'Set My Location';
 //###############################################################################//
   Gender? _selectedGender;
-  late Student _student;
 //###############################################################################//
   DateDuration ageCalculator(DateTime birthday) {
     return AgeCalculator.dateDifference(
@@ -93,7 +94,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   width: getScreenSize(context).width,
                   child: SvgPicture.asset(
                     'assets/images/top-wave-1.svg',
-                    fit: BoxFit.fitHeight,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 //#############################################################################//
@@ -122,7 +123,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: getScreenSize(context).height * 1.3),
+                SizedBox(height: getScreenSize(context).height * 1.6),
                 //#############################################################################//
                 Positioned(
                   top: 250,
@@ -253,57 +254,37 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Set My Current location    ~~~~~~~~~~~~~~~~~~~~//
                           SizedBox(
-                              width: getScreenSize(context).width * 0.8,
-                              height: 50,
-                              child: CusOutlinedButton(
-                                  isLoading: _isLocationLoading,
-                                  text: 'Set My Location',
-                                  onTap: () async {
-                                    setState(() {
-                                      _isLocationLoading = true;
-                                    });
+                            width: getScreenSize(context).width * 0.8,
+                            height: 50,
+                            child: CusOutlinedButton(
+                              isLoading: _isLocationLoading,
+                              text: addressButtonText,
+                              onTap: () async {
+                                setState(() {
+                                  _isLocationLoading = true;
+                                });
 
-                                    await Provider.of<LocationProvider>(context,
-                                            listen: false)
-                                        .setUSerCoordinates(context);
-                                    setState(() {
-                                      _isLocationLoading = false;
-                                    });
-                                    // ignore: use_build_context_synchronously
-                                    confirmAlert(context, 'Location',
-                                        'Get my current location', () {
-                                      _address = Provider.of<LocationProvider>(
-                                              context,
-                                              listen: false)
-                                          .getAddress;
-                                    });
-                                    Logger().i('Address got : $_address');
-                                    // CoolAlert.show(
-                                    //   context: context,
-                                    //   type: CoolAlertType.confirm,
-                                    //   title: 'Select Location',
-                                    //   text: 'Get my current location',
-                                    //   animType: CoolAlertAnimType.rotate,
-                                    //   confirmBtnText: 'Ok',
-                                    //   cancelBtnText: 'Cancel',
-                                    //   onConfirmBtnTap: () {
-                                    //     Provider.of<LocationProvider>(context,
-                                    //             listen: false)
-                                    //         .setUSerCoordinates();
-                                    //   },
-                                    //   onCancelBtnTap: () {
-                                    //     Navigator.pop(context);
-                                    //   },
-                                    // );
-                                    // _address = Provider.of<LocationProvider>(
-                                    //         context,
-                                    //         listen: false)
-                                    //     .getAddress;
-                                  }
-                                  //   Navigator.pushNamed(
-                                  //       context, LocationScreen.pageKey);
-                                  // },
-                                  )),
+                                await Provider.of<LocationProvider>(
+                                  context,
+                                  listen: false,
+                                ).setUSerCoordinates(context);
+
+                                setState(() {
+                                  _isLocationLoading = false;
+                                });
+                                _address = Provider.of<LocationProvider>(
+                                  context,
+                                  listen: false,
+                                ).getAddress;
+                                if (_address != '') {
+                                  setState(() {
+                                    addressButtonText = _address;
+                                  });
+                                }
+                                Logger().i('Location address: $_address');
+                              },
+                            ),
+                          ),
                           const SizedBox(height: 10),
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~  School/University          ~~~~~~~~~~~~~~~~~~~~//
                           SizedBox(
@@ -343,44 +324,53 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           SizedBox(
                             width: getScreenSize(context).width * 0.75,
                             child: CustomButton(
-                                onTap: () {
-                                  if (isEmptyValueAvailable(
-                                    context,
-                                    _firstName.text,
-                                    _lastName.text,
-                                    '${date.year}/${date.month}/${date.day}',
-                                    "${ageCalculator(date).years}-${ageCalculator(date).months}-${ageCalculator(date).days}",
-                                    genderConvertToString(_selectedGender),
-                                    _mobileNumber.text,
-                                    _address,
-                                    _school.text,
-                                    _email.text,
-                                    _password.text,
-                                  )) {
-                                    _student = Student(
-                                      firstName: _firstName.text,
-                                      lastName: _lastName.text,
-                                      birthday:
-                                          '${date.year}/${date.month}/${date.day}',
-                                      age:
-                                          '${ageCalculator(date).years}-${ageCalculator(date).months}-${ageCalculator(date).days}',
-                                      gender: genderConvertToString(
-                                          _selectedGender),
-                                      mobile: _mobileNumber.text,
-                                      location: Provider.of<LocationProvider>(
-                                              context,
+                                isLoading: _isRegistrationLoading,
+                                onTap: () async {
+                                  setState(() {
+                                    _isRegistrationLoading = true;
+                                  });
+                                  Logger().i('Tapped');
+                                  // if (isValidData(
+                                  //   context,
+                                  //   _firstName.text.trim(),
+                                  //   _lastName.text.trim(),
+                                  //   '${date.year}/${date.month}/${date.day}',
+                                  //   "${ageCalculator(date).years}-${ageCalculator(date).months}-${ageCalculator(date).days}",
+                                  //   genderConvertToString(_selectedGender),
+                                  //   _mobileNumber.text.trim(),
+                                  //   _address,
+                                  //   _school.text.trim(),
+                                  //   _email.text.trim(),
+                                  //   _password.text.trim(),
+                                  // )) {
+                                    try {
+                                      await Provider.of<User>(context,
                                               listen: false)
-                                          .getAddress,
-                                      school: _school.text,
-                                      email: _email.text,
-                                    );
-                                    Logger().i(
-                                        '${_student.firstName} / ${_student.lastName} / ${_student.age} / ${_student.birthday} / ${_student.location} / ${_student.gender} / ${_student.email} / ${_student.mobile} / ${_student.school} / ${_student.gender} / ${_student.email} / ${_student.mobile}');
-                                  } else {
-                                    Logger().w('Empty field there');
-                                  }
+                                          .svaeUserDataToFirestore(
+                                        context,
+                                        _firstName.text.trim(),
+                                        _lastName.text.trim(),
+                                        '${date.year}/${date.month}/${date.day}',
+                                        "${ageCalculator(date).years}-${ageCalculator(date).months}-${ageCalculator(date).days}",
+                                        genderConvertToString(_selectedGender),
+                                        _mobileNumber.text.trim(),
+                                        _address.trim(),
+                                        _school.text.trim(),
+                                        _email.text.trim(),
+                                        _password.text.trim(),
+                                      );
+                                    } catch (e) {
+                                      errorAlert(context, 'Somthing went wrong',
+                                          e.toString(), () {
+                                        Navigator.pop(context);
+                                      });
+                                    }
+                               //   }
+                                  setState(() {
+                                    _isRegistrationLoading = false;
+                                  });
                                 },
-                                text: 'Login'),
+                                text: 'Register'),
                           ),
                           const SizedBox(height: 15),
                           CusTextButton(
@@ -402,4 +392,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
     );
   }
+
+  void onLoginTap(
+    BuildContext context,
+    String fName,
+    String lName,
+    String birthday,
+    String age,
+    String gender,
+    String mobile,
+    String location,
+    String school,
+    String email,
+    String password,
+  ) {}
 }

@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:proacadamy_student_management_app/components/aler.dart';
+import 'package:proacadamy_student_management_app/components/alert.dart';
 
 class LocationProvider with ChangeNotifier {
   //--------------------User Location provider
@@ -21,7 +21,7 @@ class LocationProvider with ChangeNotifier {
   double get getDistance => _distance / 1000;
 // extract address from placemark list
   String get getAddress =>
-      "${_placemarks[0].name},${_placemarks[0].street},${_placemarks[0].locality},${_placemarks[0].country}}, ";
+      "${_placemarks[0].name},${_placemarks[0].street},${_placemarks[0].locality},${_placemarks[0].country}";
 
   /// Determine the current position of the device.
   /// When the location services are not enabled or permissions
@@ -38,9 +38,9 @@ class LocationProvider with ChangeNotifier {
       // accessing the position and request users of the
       // App to enable the location services.
       Logger().e('Location services are disabled.');
-      errorAlert(context, 'Error', 'Location services are disabled.', (() {
+      errorAlert(context, 'Error', 'Location services are disabled.', () {
         Navigator.pop(context);
-      }));
+      });
       return Future.error('Location services are disabled.');
     }
 
@@ -53,9 +53,9 @@ class LocationProvider with ChangeNotifier {
         // Android's shouldShowRequestPermissionRationale
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
-        errorAlert(context, 'Error','Location permissions are denied', (() {
-        Navigator.pop(context);
-      }));
+        errorAlert(context, 'Error', 'Location permissions are denied', () {
+          Navigator.pop(context);
+        });
         Logger().e('Location permissions are denied');
         return Future.error('Location permissions are denied');
       }
@@ -63,9 +63,11 @@ class LocationProvider with ChangeNotifier {
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      errorAlert(context, 'Error', 'Location permissions are permanently denied, we cannot request permissions.', (() {
+      errorAlert(context, 'Error',
+          'Location permissions are permanently denied, we cannot request permissions.',
+          () {
         Navigator.pop(context);
-      }));
+      });
       Logger().e(
           'Location permissions are permanently denied, we cannot request permissions.');
       return Future.error(
@@ -82,11 +84,12 @@ class LocationProvider with ChangeNotifier {
     try {
       //store the given coordinates by method
       _position = await _determinePosition(context);
-
+      Logger().i('Position genarated ${_position!.latitude}');
       // fetch coordinates
       _placemarks = await placemarkFromCoordinates(
           _position!.latitude, _position!.longitude);
-
+      Logger().i('PlaceMark genarated ${_placemarks[0]}');
+      Logger().w('PlaceMark genarated $getAddress');
       notifyListeners();
     } catch (e) {
       Logger().e(e);

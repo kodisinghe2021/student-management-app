@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
+import 'package:proacadamy_student_management_app/components/alert.dart';
 import 'package:proacadamy_student_management_app/components/custom_buttons.dart';
 import 'package:proacadamy_student_management_app/components/custom_text.dart';
 import 'package:proacadamy_student_management_app/components/text_field.dart';
 import 'package:proacadamy_student_management_app/const_vaues.dart';
+import 'package:proacadamy_student_management_app/controller/data_validation.dart';
+import 'package:proacadamy_student_management_app/providers/user_provider.dart';
 import 'package:proacadamy_student_management_app/utils/app_colours.dart';
 import 'package:proacadamy_student_management_app/views/login_screens/registration_screen.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,7 +24,10 @@ class _LoginScreenState extends State<LoginScreen> {
 //#############################################################################//
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+//#############################################################################//
   bool _isSecure = false;
+  bool _isLoading = false;
+//#############################################################################//
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: getScreenSize(context).width,
                   child: SvgPicture.asset(
                     'assets/images/top-wave-1.svg',
-                    fit: BoxFit.fitHeight,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 //#############################################################################//
@@ -100,8 +107,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: getScreenSize(context).width * 0.75,
                           child: CustomButton(
-                              onTap: () {
-                                Logger().i('Tapped');
+                              isLoading: _isLoading,
+                              onTap: () async {
+                                try {
+                                  if (isValidLoginFields(
+                                      context, _email.text, _password.text)) {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    Logger().i('Tapped');
+                                    await Provider.of<User>(context,
+                                            listen: false)
+                                        .signInUser(
+                                      context,
+                                      _email.text.trim(),
+                                      _password.text.trim(),
+                                    );
+                                  }
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                } catch (e) {
+                                  errorAlert(
+                                      context, 'ERROR', 'Somthing went wrong',
+                                      (() {
+                                    Navigator.pop(context);
+                                  }));
+                                }
                               },
                               text: 'Login'),
                         ),

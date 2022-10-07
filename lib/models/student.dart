@@ -1,4 +1,5 @@
 class Student {
+  String id;
   String firstName;
   String lastName;
   String birthday;
@@ -10,6 +11,7 @@ class Student {
   String email;
 
   Student({
+    required this.id,
     required this.firstName,
     required this.lastName,
     required this.birthday,

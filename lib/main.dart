@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:proacadamy_student_management_app/providers/user_provider.dart';
+import 'package:proacadamy_student_management_app/views/home_screens/main_pages_handller.dart';
 import 'package:proacadamy_student_management_app/views/location_controller.dart';
 import 'package:proacadamy_student_management_app/providers/location_provider.dart';
 import 'package:proacadamy_student_management_app/views/login_screens/login_screen.dart';
@@ -14,6 +16,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => LocationProvider()),
+        ChangeNotifierProvider(create: (context) => User()),
       ],
       child: const MyApp(),
     ),
@@ -32,6 +35,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.pageKey: (context) => const LoginScreen(),
         RegistrationScreen.pageKey: (context) => const RegistrationScreen(),
         LocationScreen.pageKey: (context) => const LocationScreen(),
+        MainScreensHandller.pageKey: (context) => const MainScreensHandller(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
