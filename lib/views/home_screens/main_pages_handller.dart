@@ -25,16 +25,16 @@ class _MainScreensHandllerState extends State<MainScreensHandller> {
     return SafeArea(
       child: Scaffold(
 //##############################################################################//
-        appBar: AppBar(
-          leading: const Icon(Icons.menu),
-          title: const Text('MainPage'),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Icon(Icons.logout),
-            )
-          ],
-        ),
+        // appBar: AppBar(
+        //   leading: const Icon(Icons.menu),
+        //   title: const Text('MainPage'),
+        //   actions: const [
+        //     Padding(
+        //       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        //       child: Icon(Icons.logout),
+        //     )
+        //   ],
+        // ),
 
 //##############################################################################//
 

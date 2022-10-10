@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   // Navigate to login or home page
   Future<void> navigateToSelectedPage() async {
     Future.delayed(const Duration(milliseconds: 5000), () async {
-      Provider.of<User>(context, listen: false).navigateWithuserStatus(context);
+     Provider.of<User>(context, listen: false).navigateWithuserStatus(context);
       // Navigator.pushReplacementNamed(context, LoginScreen.pageKey);
     });
   }

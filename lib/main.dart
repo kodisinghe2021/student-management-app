@@ -1,13 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:proacadamy_student_management_app/providers/course_provider.dart';
+import 'package:proacadamy_student_management_app/providers/location_provider.dart';
 import 'package:proacadamy_student_management_app/providers/user_provider.dart';
 import 'package:proacadamy_student_management_app/views/home_screens/main_pages_handller.dart';
 import 'package:proacadamy_student_management_app/views/location_controller.dart';
-import 'package:proacadamy_student_management_app/providers/location_provider.dart';
 import 'package:proacadamy_student_management_app/views/login_screens/login_screen.dart';
 import 'package:proacadamy_student_management_app/views/login_screens/registration_screen.dart';
 import 'package:proacadamy_student_management_app/views/splash_screen/splash_screen.dart';
+import 'package:proacadamy_student_management_app/views/student_list/student_list.dart';
 import 'package:provider/provider.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +18,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => LocationProvider()),
-        ChangeNotifierProvider(create: (context) => User()),
+         ChangeNotifierProvider(create: (context) => LocationProvider()),
+         ChangeNotifierProvider(create: (context) => User()),
+        ChangeNotifierProvider(create: (context) => CoursesProvider()),
       ],
       child: const MyApp(),
     ),
@@ -36,6 +40,7 @@ class MyApp extends StatelessWidget {
         RegistrationScreen.pageKey: (context) => const RegistrationScreen(),
         LocationScreen.pageKey: (context) => const LocationScreen(),
         MainScreensHandller.pageKey: (context) => const MainScreensHandller(),
+        StudentList.pageKey: (context) => const StudentList(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

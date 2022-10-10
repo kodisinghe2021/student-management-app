@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: SizedBox(
-            height: getScreenSize(context).height,
+            // height: getScreenSize(context).height,
             width: getScreenSize(context).width,
             child: Stack(
               children: [
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   top: 400,
                   child: SizedBox(
                     width: getScreenSize(context).width,
-                    height: getScreenSize(context).height * 0.6,
+                    height: getScreenSize(context).height * 0.8,
                     child: Column(
                       children: [
                         SizedBox(
